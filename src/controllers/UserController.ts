@@ -5,15 +5,17 @@ import { Request, Response } from "express";
 
 interface IUser {
     _id?: string,
+    name: string,
     cpf: string,
-    password: string
+    password: string,
+    userPhoto: string //base64
 }
 
 class UserController {
     async create(req: Request, res: Response) {
         try {
-            const { cpf, password }: IUser = req.body;
-            if(!cpf || !password) {
+            const { name, cpf, password, userPhoto }: IUser = req.body;
+            if(!cpf || !password || !name) {
                 return res.status(400).json({message: "dados faltando"});
             }
 
@@ -23,8 +25,10 @@ class UserController {
                 const salt = await bcrypt.genSalt(12);
                 const passwordHashed = await bcrypt.hash(password, salt);
                 const register = new UserModel({
+                    name: name,
                     cpf: cpf,
                     password: passwordHashed,
+                    userPhoto: userPhoto
                 });
                 const createdUser = await UserModel.create(register);
 
@@ -65,7 +69,7 @@ class UserController {
                 id: user._id
             }, secret);
 
-            return res.status(200).json({user: user._id, token: token});
+            return res.status(200).json({userName: user.name, userId: user._id, userPhoto: user.userPhoto, token: token});
 
         } catch (err) {
             return res.status(400).json({error: err});

@@ -7,6 +7,6 @@ const MessageSchema = new Schema({
     date: String
 });
 
-const MessageModel = mongoose.model("user", MessageSchema);
+const MessageModel = mongoose.model("messages", MessageSchema);
 
 export default MessageModel;

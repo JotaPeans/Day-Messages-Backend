@@ -5,28 +5,26 @@ import utcToZonedTime = require("date-fns-tz/utcToZonedTime");
 interface IMessage {
     userFromId: string,
     userToId: string,
-    messageFromBody: string,
+    message: string,
     date?: string
 }
 
 class MessageController {
     async createMessage(req: Request, res: Response) {
         try {
-            const { userFromId, userToId, messageFromBody }: IMessage = req.body;
+            const { userFromId, userToId, message }: IMessage = req.body;
             const date = new Date().toISOString();
 
-            const message = new MessageModel({
+            const messageModel = new MessageModel({
                 userFromId: userFromId,
                 userToId: userToId,
-                messageFromBody: messageFromBody,
+                message: message,
                 date: date,
             });
 
-            const createdMessage = await MessageModel.create(message);
+            const createdMessage = await MessageModel.create(messageModel);
 
-            return res.status(200).json({
-                createdMessage: createdMessage
-            });
+            return res.status(200).json({message: "mensagem criada"});
 
         } catch (err) {
             return res.status(400).json({message: err});
@@ -36,13 +34,13 @@ class MessageController {
     
     async getAllMessages(req: Request, res: Response) {
         try {
-            const message: IMessage[] | null = await MessageModel.find({});
+            const messages: IMessage[] | null = await MessageModel.find({});
             
-            if(!message) {
+            if(!messages) {
                 return res.status(404).json({message: "nenhuma mensagem cadastrada"});
             }
 
-            return res.status(200).json({message: message});
+            return res.status(200).json({message: messages});
 
         } catch (err) {
             return res.status(400).json({message: err});
@@ -53,13 +51,17 @@ class MessageController {
         try {
             const { userToId } = req.params;
             
-            const message: IMessage[] | null = await MessageModel.find({userToId: userToId});
+            const messages: IMessage[] | null = await MessageModel.find({userToId: userToId});
 
-            if(!message) {
+            if(!messages) {
                 return res.status(404).json({message: "nenhuma mensagem cadastrada"});
             }
 
-            return res.status(200).json({message: message});
+            for(let message of messages) {
+                message.date = utcToZonedTime(message.date, "America/Sao_Paulo").toLocaleDateString();
+            }
+            
+            return res.status(200).json(messages);
 
         } catch (err) {
             return res.status(400).json({message: err});
