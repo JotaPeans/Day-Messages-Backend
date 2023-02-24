@@ -65,7 +65,7 @@ class UserController {
                 id: user._id
             }, secret);
 
-            return res.status(200).json({user: user, token: token});
+            return res.status(200).json({user: user._id, token: token});
 
         } catch (err) {
             return res.status(400).json({error: err});
@@ -75,7 +75,7 @@ class UserController {
 
     async showAll(req: Request, res: Response) {
         try {
-            const users: IUser[] = await UserModel.find({isAdmin: false}, "-password");
+            const users: IUser[] | null = await UserModel.find({isAdmin: false}, "-password");
             if(!users) {
                 return res.status(404).json({message: "Usuário inexistente"});
             }

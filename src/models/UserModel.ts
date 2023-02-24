@@ -1,5 +1,4 @@
-import mongoose, { mongo } from "mongoose";
-import Schema from "./Schema";
+import mongoose, { Schema } from "mongoose";
 
 const UserSchema = new Schema({
     cpf: String,

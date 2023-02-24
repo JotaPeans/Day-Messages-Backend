@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { Response, Request, NextFunction } from "express";
-import "dotenv";
+import "dotenv/config";
 
 function checkToken(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers["authorization"];
@@ -11,10 +11,10 @@ function checkToken(req: Request, res: Response, next: NextFunction) {
     }
 
     try {
-        const secret = <string>process.env.JWT_SECRET;
+        const secret = process.env.JWT_SECRET;
         jwt.verify(token, secret);
 
-        next()
+        next();
 
     } catch (err) {
         return res.status(404).json({message: "Token inválido"});

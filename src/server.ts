@@ -1,4 +1,4 @@
-import "dotenv"
+import "dotenv/config";
 import app from "./app";
 import Loaders from "./loaders/index";
 
