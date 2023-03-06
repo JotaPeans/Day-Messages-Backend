@@ -67,7 +67,9 @@ class UserController {
 
             const token = jwt.sign({
                 id: user._id
-            }, secret);
+            }, secret, {
+                expiresIn: 3600
+            });
 
             return res.status(200).json({userName: user.name, userId: user._id, userPhoto: user.userPhoto, token: token});
 
