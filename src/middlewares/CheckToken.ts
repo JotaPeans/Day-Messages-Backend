@@ -17,7 +17,7 @@ function checkToken(req: Request, res: Response, next: NextFunction) {
         next();
 
     } catch (err) {
-        return res.status(404).json({message: "Token inválido"});
+        return res.status(400).json({message: "Token inválido"});
     }
 }
 
