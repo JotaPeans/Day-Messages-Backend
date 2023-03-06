@@ -6,7 +6,7 @@ interface IMessage {
     userFromId: string,
     userToId: string,
     message: string,
-    date?: string
+    date?: Date
 }
 
 class MessageController {
@@ -58,7 +58,7 @@ class MessageController {
             }
 
             for(let message of messages) {
-                message.date = utcToZonedTime(message.date, "America/Sao_Paulo").toLocaleDateString();
+                message.date = utcToZonedTime(message.date, "America/Sao_Paulo")//.toLocaleDateString();
             }
             
             return res.status(200).json(messages);
